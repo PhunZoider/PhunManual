@@ -1,0 +1,5 @@
+UI_EN = {
+    UI_Intro1 = "AS IF THE APOCOLYPSE WASN'T BAD ENOUGH...",
+    UI_Intro2 = "YOU'RE IN KENTUCKY",
+    UI_Intro3 = "MIGHT AS WELL HAVE SOME PHUN.",
+}

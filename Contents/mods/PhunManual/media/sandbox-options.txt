@@ -1,0 +1,35 @@
+VERSION = 1,
+
+option PhunManual.ManualPages
+{ 
+    type = string,
+    default = 0;1;2;3;4;5;6;7;8;9;10;11,
+    page = PhunManual, 
+    translation = PhunManual_ManualPages,
+}
+
+option PhunManual.ManualSecondsToShowFirstPage
+{ 
+    type = integer,
+    default = 2,
+    min=0,
+    max=100,
+    page = PhunManual,
+    translation = PhunManual_ManualSecondsToShowFirstPage,
+}
+
+option PhunManual.ManualShowOnPhunZoneWidgetClick
+{ 
+    type = boolean,
+    default = true,
+    page = PhunManual, 
+    translation = PhunManual_ShowOnPZWidgetClick,
+}
+
+option PhunManual.ManualShowOnCharacterCreate
+{ 
+    type = boolean,
+    default = true,
+    page = PhunManual, 
+    translation = PhunManual_ManualShowOnCharacterCreate,
+}
