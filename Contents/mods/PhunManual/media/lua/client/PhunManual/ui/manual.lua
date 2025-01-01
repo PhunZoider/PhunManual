@@ -157,10 +157,8 @@ function UI:navigate(page)
         end
     end
 
-    if readall then
-        print("---- >YES")
+    if readall or PM.settings.MustReadOnceBeforeClose then
         self.closeit.enable = true
-        modData.pages = nil
     else
         self.closeit.tooltip =
             "You must read all pages before you can close this window. You still need to read: pages " ..
