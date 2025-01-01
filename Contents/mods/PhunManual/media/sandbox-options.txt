@@ -8,15 +8,6 @@ option PhunManual.ManualPages
     translation = PhunManual_ManualPages,
 }
 
-option PhunManual.ManualSecondsToShowFirstPage
-{ 
-    type = integer,
-    default = 2,
-    min=0,
-    max=100,
-    page = PhunManual,
-    translation = PhunManual_ManualSecondsToShowFirstPage,
-}
 
 option PhunManual.ManualShowOnPhunZoneWidgetClick
 { 
@@ -32,4 +23,12 @@ option PhunManual.ManualShowOnCharacterCreate
     default = true,
     page = PhunManual, 
     translation = PhunManual_ManualShowOnCharacterCreate,
+}
+
+option PhunManual.MustReadOnceBeforeClose
+{ 
+    type = boolean,
+    default = true,
+    page = PhunManual, 
+    translation = PhunManual_MustReadOnceBeforeClose,
 }

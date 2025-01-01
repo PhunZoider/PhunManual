@@ -1,7 +1,6 @@
 if not isClient() then
     return
 end
-require "ISUI/ISCollapsableWindowJoypad"
 local PM = PhunManual
 
 local FONT_HGT_SMALL = getTextManager():getFontHeight(UIFont.Small)
@@ -11,35 +10,9 @@ local FONT_HGT_LARGE = getTextManager():getFontHeight(UIFont.Large)
 local FONT_SCALE = FONT_HGT_SMALL / 14
 local HEADER_HGT = FONT_HGT_MEDIUM + 2 * 2
 local profileName = "PhunStuffUIWelcome"
-PM.ui.manual = ISCollapsableWindowJoypad:derive(profileName);
+PM.ui.manual = ISPanel:derive(profileName);
 PM.ui.manual.instances = {}
 local UI = PM.ui.manual
-
-local timerEnd = nil
-local timerInstance = nil
-local function autoTurnTimer()
-    if not timerEnd then
-        local settings = PM.settings
-        if (settings.ManualSecondsToShowFirstPage or 0) > 0 then
-            timerEnd = getTimestamp() + settings.ManualSecondsToShowFirstPage
-        else
-            Events.OnTick.Remove(function()
-                autoTurnTimer(timerInstance)
-            end)
-        end
-    end
-    if timerEnd and getTimestamp() > timerEnd then
-        Events.OnTick.Remove(autoTurnTimer)
-        timerEnd = nil
-        local ti = timerInstance
-        local page = ti.page.selected
-        if page < 2 then
-            page = page + 1
-            timerInstance:navigate(page)
-        end
-        timerInstance = nil
-    end
-end
 
 function UI.OnOpenPanel(playerObj, playerIndex)
 
@@ -61,15 +34,13 @@ function UI.OnOpenPanel(playerObj, playerIndex)
     UI.instances[playerIndex]:addToUIManager();
     UI.instances[playerIndex]:setVisible(true);
     UI.instances[playerIndex].panelIndex = 1
-    timerInstance = UI.instances[playerIndex]
-    Events.OnTick.Add(autoTurnTimer)
     return UI.instances[playerIndex];
 
 end
 
 function UI:new(x, y, width, height, player)
     local o = {};
-    o = ISCollapsableWindowJoypad:new(x, y, width, height, player);
+    o = ISPanel:new(x, y, width, height, player);
     setmetatable(o, self);
     self.__index = self;
 
@@ -100,16 +71,11 @@ function UI:new(x, y, width, height, player)
     o.zOffsetMediumFont = 20;
     o.zOffsetSmallFont = 6;
     o:setWantKeyEvents(true)
-    o:setTitle("Scrapbook")
+    -- o:setTitle("Scrapbook")
     return o;
 end
 
 function UI:close()
-    if timerEnd ~= nil then
-        Events.OnTick.Remove(autoTurnTimer)
-        timerEnd = nil
-        timerInstance = nil
-    end
     self:removeFromUIManager();
     UI.instances[self.pIndex] = nil
 end
@@ -134,18 +100,18 @@ end
 -- br = hard break
 -- text = normal text
 local txts = {
-    txt0 = "<H2><LEFT>Welcome <LINE><TEXT>This small guide will intro you to some of the unique and custom features of this server. <BR>You can open this window at any time by clicking the location widget: <BR><IMAGECENTRE:media/textures/PhunStuff_LocationWidget.png>",
+    txt0 = "<H2><LEFT>Welcome <LINE><TEXT>This small guide will intro you to some of the unique and custom features of this server. <BR>You can open this window at any time by clicking the location widget: <BR><IMAGECENTRE:media/textures/PMI1.png>",
     txt1 = "<H2><LEFT>The Hospital <LINE><TEXT>You have awoken in what appears to be an underground, hidden hopital room. <BR>This unique spawning system increases a sense of danger when exploring new areas. While encouraging community interation.",
     txt2 = "<H2><LEFT>First Loot <LINE><TEXT>When you awaken, all of the clothing and gear you would normally have spawned in with will be located in the drawers next to the bed. <BR>Gear is profession specific. Some professions get better gear than others.",
     txt3 = "<H2><LEFT>The Escape <LINE><TEXT>When you're ready to exit, you can escape through the vent. In case you want to avoid entering the world in the dark, check the clock first! You will then be prompted to choose which location you want to spawn in. <BR><LEFT><RGB:1,1,0>IMPORTANT: <LINE><TEXT>You can only ever spawn into the world at a vent you have discovered or crafted.",
     txt4 = "<H2><LEFT>Clues <LINE><TEXT>Since you can only spawn at vents, you will need to find or craft more as you explore Kentucky. <BR>To help find more vents, look for Clues that can drop from zeds. You can also craft vents through in the crafting window. <BR><RGB:1,1,0>Note: <LINE><TEXT>Although you can place a vent within your safehouse, you cannot claim a safehouse if the building has an existing vent (as it could allow others to spawn into the safehouse). Because you can't crawl from a vent into a vehicle, vents cannot place inside an RV.",
     txt5 = "<H2><LEFT>Sprinters <LINE><TEXT>Depending on where you are and how dark (or foggy) it is, you may encouter sprinters. <BR>These sprinters are faster than normal zeds and can be quite dangerous. <BR>Be cautious when exploring new areas. <BR><H2><LEFT><RGB:1,1,0>Tips <LINE><TEXT>- Sprinters look like skeletons <LINE>- Sprinters stop running if its light. <LINE>- Attach a flashlight to your belt, backpack or helmet to slow them down <LINE>- Keep an eye on your location, it will indicate the risk level of spawning sprinters",
     txt6 = "<H2><LEFT>A Cure? <LINE><TEXT>Hazmat zeds drop special Ampules which will can remove the Knox virus. Trouble is, it will go off and become ineffectual within a couple days. Best to keep refridgerated or frozen!",
-    txt7 = "<H2><LEFT>Shopping <LINE><TEXT>Almost everything in game can be purchased at special vending machines scattered across the map. <BR>These machines take a variety of currency (most which drop from zeds) and let you buy things from cars to weapons to boosts and perks <BR><H2><LEFT>Currency <LINE><TEXT>The different coins you pick up go into your wallet which can be found on a tab in your health and skill window. <BR><IMAGECENTRE:media/textures/PhunStuff_TextWallet.png> <LINE><TEXT>If you die, you can recover your wallet from your body, though some coins will be lost.<BR><IMAGECENTRE:media/textures/PhunStuff_TextWalletPickup.png> ",
+    txt7 = "<H2><LEFT>Shopping <LINE><TEXT>Almost everything in game can be purchased at special vending machines scattered across the map. <BR>These machines take a variety of currency (most which drop from zeds) and let you buy things from cars to weapons to boosts and perks <BR><H2><LEFT>Currency <LINE><TEXT>The different coins you pick up go into your wallet which can be found on a tab in your health and skill window. <BR><IMAGECENTRE:media/textures/PMI4.png> <LINE><TEXT>If you die, you can recover your wallet from your body, though some coins will be lost.<BR><IMAGECENTRE:media/textures/PMI5.png> ",
     txt8 = "<H2><LEFT>Safe Space <LINE><TEXT>The Michelles Crafts vending machine sells a special item called Repellent Paint which allows you to create a Safehouse from scratch or to extend an existing Safehouse",
-    txt9 = "<H2><LEFT>Car Claims <LINE><TEXT>Want to protect your car and it's contents? Claim it! <BR>You can claim up to 5 cars. In order to claim, you need to craft a Mysterious Orb which you can find in the crafting window <BR><IMAGECENTRE:media/textures/PhunStuff_TextCraftOrb.png> ",
+    txt9 = "<H2><LEFT>Car Claims <LINE><TEXT>Want to protect your car and it's contents? Claim it! <BR>You can claim up to 5 cars. In order to claim, you need to craft a Mysterious Orb which you can find in the crafting window <BR><IMAGECENTRE:media/textures/PMI3.png> ",
     txt10 = "<H2><LEFT>Solar <LINE><TEXT>Don't let climate change destroy your apocolypse! <BR>Keep an eye out for solar panels and related parts. They are critical for power generation after gas stations run dry!",
-    txt11 = "<H2><LEFT>Join the discord! <LINE><TEXT>For important info, click here. <BR><H2><LEFT>Journaling <LINE><TEXT>Craft a Journal (search in the crafting window) to preserve most of your skills between spawns. <BR><IMAGECENTRE:media/textures/PhunStuff_TextCraftJournal.png>  <BR><H2><LEFT>Car Claims <LINE><TEXT>Claim up to 5 cars by crafting and applying a Mysterious Orb (search in the crafting window). <BR><H2><LEFT>Loot respawns <LINE><TEXT>Every few days as long as the container has been emptied and is not player made. Note that some map mods do their own thing. <BR><H2><LEFT>Vanishing Items <LINE><TEXT>With few exceptions, dropped loot will despawn. If you want something to stay on the floor, place it!"
+    txt11 = "<H2><LEFT>Join the discord! <LINE><TEXT>For important info, click here. <BR><H2><LEFT>Journaling <LINE><TEXT>Craft a Journal (search in the crafting window) to preserve most of your skills between spawns. <BR><IMAGECENTRE:media/textures/PMI2.png>  <BR><H2><LEFT>Car Claims <LINE><TEXT>Claim up to 5 cars by crafting and applying a Mysterious Orb (search in the crafting window). <BR><H2><LEFT>Loot respawns <LINE><TEXT>Every few days as long as the container has been emptied and is not player made. Note that some map mods do their own thing. <BR><H2><LEFT>Vanishing Items <LINE><TEXT>With few exceptions, dropped loot will despawn. If you want something to stay on the floor, place it!"
 }
 
 function UI:navigate(page)
@@ -153,18 +119,53 @@ function UI:navigate(page)
         self.page.selected = page
     end
     self.imagePanel.texture = self.panelImages[page].texture
-    local raw = luautils.split(PM.settings.ManualPages, ",")
+    local raw = luautils.split(PM.settings.ManualPages, ";")
     local txt = getTextOrNull("IGUI_PhunManual_P" .. (page - 1) .. "Title") or ""
 
     if txts["txt" .. (page - 1)] then
         txt = txts["txt" .. (page - 1)]
     end
     local link = getTextOrNull("IGUI_PhunStuff_WelcomeClick" .. (page - 1))
+    self.description.imageCount = 0
     self.description:setText(txt)
     self.description:paginate()
 
     self.previousDisable:setVisible(page <= 1)
     self.nextDisable:setVisible(page >= #self.panelImages)
+
+    if not self.player:getModData().PhunManual then
+        self.player:getModData().PhunManual = {}
+    end
+
+    local modData = self.player:getModData().PhunManual
+    if not modData.pages then
+        modData.pages = {
+            [1] = true
+        }
+    end
+    if not modData.pages[1] then
+        -- give first page by default
+        modData.pages[1] = true
+    end
+    modData.pages[page] = true
+    local readall = true
+    local remqaining = {}
+    for i, v in ipairs(raw) do
+        if not modData.pages[i + 1] then
+            readall = false
+            table.insert(remqaining, i + 1)
+        end
+    end
+
+    if readall then
+        print("---- >YES")
+        self.closeit.enable = true
+        modData.pages = nil
+    else
+        self.closeit.tooltip =
+            "You must read all pages before you can close this window. You still need to read: pages " ..
+                table.concat(remqaining, ", ")
+    end
 end
 
 function UI:onMouseMove(dx, dy)
@@ -224,11 +225,11 @@ end
 
 function UI:createChildren()
 
-    ISCollapsableWindowJoypad.createChildren(self);
+    ISPanel.createChildren(self);
 
     if not self.panelImages then
         self.panelImages = {}
-        for i = 1, 15 do
+        for i = 1, 25 do
             local texture = getTexture("media/textures/PM" .. (i - 1) .. ".png")
             if not texture then
                 break
@@ -244,14 +245,11 @@ function UI:createChildren()
 
     end
 
-    local th = self:titleBarHeight()
-    local rh = self:resizeWidgetHeight()
-
     local padding = 10
     local x = padding
-    local y = th + padding
+    local y = padding
 
-    self.imagePanel = ISImage:new(x, y, self.height - th - rh - 2, self.height - th - rh - 2,
+    self.imagePanel = ISImage:new(x, y, self.height - padding - padding - 2, self.height - padding - padding - 2,
         self.panelImages[1].texture);
 
     self.imagePanel.scaledWidth = self.imagePanel.width
@@ -272,7 +270,7 @@ function UI:createChildren()
 
     x = self.imagePanel.x + self.imagePanel.width + padding
 
-    self.page = ISComboBox:new(x, y, 215, FONT_HGT_MEDIUM, self, function()
+    self.page = ISComboBox:new(x, y, 210, FONT_HGT_MEDIUM, self, function()
         self:navigate(self.page.selected)
     end);
     self.page:initialise()
@@ -286,9 +284,18 @@ function UI:createChildren()
 
     y = y + self.page.height + padding
 
+    self.closeit = ISButton:new(x, self.height - 35, self.width - x - padding, 25, " Close ", self, function()
+        self:close()
+    end)
+    self.closeit:initialise()
+    self.closeit.enable = false
+    self:addChild(self.closeit)
+
     -- description
-    self.description = ISRichTextPanel:new(x, y, self.width - x - padding,
-        self.height - (self.page.y - self.page.height - padding));
+    -- self.description.height = self.height - self.description.y - (self.closeit.height + 20)
+    -- self.description.height = self.height - self.description.y - (self.closeit.height + 20)
+    -- self.closeit.y = self.description.y + self.description.height + 10
+    self.description = ISRichTextPanel:new(x, y, self.width - x - padding, self.height - y - (self.closeit.height + 20));
     self.description:initialise();
     self.description:instantiate();
     self.description.borderColor = {
@@ -370,7 +377,7 @@ end
 
 function UI:prerender()
 
-    ISCollapsableWindowJoypad.prerender(self);
+    ISPanel.prerender(self);
     self:drawRect(0, 0, self.width, self.height, self.backgroundColor.a, self.backgroundColor.r, self.backgroundColor.g,
         self.backgroundColor.b);
     self:drawRectBorder(0, 0, self.width, self.height, self.borderColor.a, self.borderColor.r, self.borderColor.g,
@@ -397,3 +404,4 @@ function UI:prerender()
     local image = self.panelImages[self.panelIndex]
 
 end
+

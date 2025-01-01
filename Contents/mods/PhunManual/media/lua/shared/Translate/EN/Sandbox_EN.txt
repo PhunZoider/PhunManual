@@ -3,13 +3,13 @@ Sandbox_EN = {
     Sandbox_PhunManual_ManualPages = "Pages"
     Sandbox_PhunManual_ManualPages_tooltip = "CSV of pages to display"
 
-    Sandbox_PhunManual_ManualSecondsToShowFirstPage = "Seconds for first page"
-    Sandbox_PhunManual_ManualSecondsToShowFirstPage_tooltip = "After x seconds, automatically flip to page 1. Setting to 0 will disable"
-
     Sandbox_PhunManual_ManualShowOnCharacterCreate = "Show on create"
     Sandbox_PhunManual_ManualShowOnCharacterCreate_tooltip = "Automatically show when a new character is created"
 
     Sandbox_PhunManual_ShowOnPZWidgetClick= "Show on PhunZone Widget Click"
     Sandbox_PhunManual_ShowOnPZWidgetClick_tooltip = "Show manual when player clicks PhunZone location widget (requires PhunZones to be installed)"
+
+    Sandbox_PhunManual_MustReadOnceBeforeClose= "Close only on last page once"
+    Sandbox_PhunManual_MustReadOnceBeforeClose_tooltip = "Disable close button until last page for first show"
 
 }
