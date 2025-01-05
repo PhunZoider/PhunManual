@@ -107,7 +107,7 @@ local txts = {
     txt3 = "<H2><LEFT>The Escape <LINE><TEXT>When you're ready to exit, you can escape through the vent. In case you want to avoid entering the world in the dark, check the clock first! You will then be prompted to choose which location you want to spawn in. <BR><LEFT><RGB:1,1,0>IMPORTANT: <LINE><TEXT>You can only ever spawn into the world at a vent you have discovered or crafted.",
     txt4 = "<H2><LEFT>Clues <LINE><TEXT>Since you can only spawn at vents, you will need to find or craft more as you explore Kentucky. <BR>To help find more vents, look for Clues that can drop from zeds. You can also craft vents through in the crafting window. <BR><RGB:1,1,0>Note: <LINE><TEXT>Although you can place a vent within your safehouse, you cannot claim a safehouse if the building has an existing vent (as it could allow others to spawn into the safehouse).",
     txt5 = "<H2><LEFT>Sprinters <LINE><TEXT>Depending on where you are and how dark (or foggy) it is, you may encounter sprinters. <BR>These sprinters are faster than normal zeds and can be quite dangerous. <BR><IMAGECENTRE:media/textures/PMI6.png> <BR>Be cautious when exploring new areas. <BR><H2><LEFT><RGB:1,1,0>Tips <LINE><TEXT>- Sprinters look like skeletons <LINE>- Sprinters stop running if its light. <LINE>- Attach a flashlight to your belt, backpack or helmet to slow them down <LINE>- Keep an eye on the skull moodle, it will indicate the risk level of spawning sprinters",
-    txt6 = "<H2><LEFT>Nuclear POWA <LINE><TEXT>Rumours have it that some survivors are trying to power up the nearby nuclear power plant to provide the area with power. However their attempts so far have left some areas of Kentucky radiated. <BR><H2><LEFT><RGB:1,1,0>Follow these tips for longer life <LINE><TEXT><LINE>- Keep a working Geiger Counter on your toolbelt at all times to receive early warnings of radiation exposure <LINE>- Take Iodine pills to provide protection against radiation <LINE>- Iodine will also reduce radiation sickness as long as you are in a no or lower radiated area <LINE>- Hazmat gear will help insulate against radiation, but make sure you keep it in good condition! <LINE>- Some items will emit radiation, so don't accept nuclear waste from strangers <BR><IMAGECENTRE:media/textures/PMI7.png>",
+    txt6 = "<H2><LEFT>Nuclear POWA <LINE><TEXT>Rumours have it that some survivors are trying to power up the nearby nuclear power plant to provide the area with power. However their attempts so far have left some areas of Kentucky radiated. <BR><H2><LEFT><RGB:1,1,0>Tips <LINE><TEXT><LINE>- Keep a working Geiger Counter on your toolbelt at all times to receive early warnings of radiation exposure <LINE>- Take Iodine pills to provide protection against radiation <LINE>- Iodine will also reduce radiation sickness as long as you are in a no or lower radiated area <LINE>- Hazmat gear will help insulate against radiation, but make sure you keep it in good condition! <LINE>- Some items will emit radiation, so don't accept nuclear waste from strangers <BR><IMAGECENTRE:media/textures/PMI7.png>",
     txt7 = "<H2><LEFT>Machines <LINE><TEXT> You can now create specialized machines to super charge your survival. These are found within the Building Menu (via right clicking or the the shortcut key /)",
     txt8 = "<H2><LEFT>A Cure? <LINE><TEXT>Hazmat zeds drop special Ampules which will can remove the Knox virus. Trouble is, it will go off and become ineffectual within a couple days. Best to keep refridgerated or frozen!",
     txt9 = "<H2><LEFT>Shopping <LINE><TEXT>Almost everything in game can be purchased at special vending machines scattered across the map. <BR>These machines take a variety of currency (most which drop from zeds) and let you buy things from cars to weapons to boosts and perks <BR><H2><LEFT>Currency <LINE><TEXT>The different coins you pick up go into your wallet which can be found on a tab in your health and skill window. <BR><IMAGECENTRE:media/textures/PMI4.png> <LINE><TEXT>If you die, you can recover your wallet from your body, though some coins will be lost.<BR><IMAGECENTRE:media/textures/PMI5.png> ",
@@ -316,7 +316,7 @@ function UI:createChildren()
 
     x = self.imagePanel.x + self.imagePanel.width + padding
 
-    self.page = ISComboBox:new(x, y, 210, FONT_HGT_MEDIUM, self, function()
+    self.page = ISComboBox:new(x, y, self.width - x - padding, FONT_HGT_MEDIUM, self, function()
         self:navigate(self.page.selected)
     end);
     self.page:initialise()
@@ -337,41 +337,8 @@ function UI:createChildren()
     self.closeit.enable = false
     self:addChild(self.closeit)
 
-    -- description
-    -- self.description.height = self.height - self.description.y - (self.closeit.height + 20)
-    -- self.description.height = self.height - self.description.y - (self.closeit.height + 20)
-    -- self.closeit.y = self.description.y + self.description.height + 10
-    self.description = ISRichTextPanel:new(x, y, self.width - x - padding, self.height - y - (self.closeit.height + 20));
-    self.description:initialise();
-    self.description:instantiate();
-    self.description.borderColor = {
-        r = 0.7,
-        g = 0.7,
-        b = 0.7,
-        a = 1
-    };
-    self.description.backgroundColor = {
-        r = 0,
-        g = 0,
-        b = 0,
-        a = 0.8
-    };
-    -- self.description.onMouseMove = self.onMouseMove
-    -- self.description.onMouseDown = self.onMouseDown
-    self.description.onMouseUp = function(x, y)
-        self:onMouseUp(x, y)
-    end
-    self.description.borderColor = self.buttonBorderColor
-    self.description.autosetheight = false
-    self.description:setText(getText("IGUI_PhunStuff_WelcomeText0"))
-    self.description:paginate()
-
-    self:addChild(self.description);
-
-    y = self.description.y + self.description.height + 10
-
-    self.previous = ISButton:new(self.page.x + self.page.width + padding, self.page.y, self.page.height,
-        self.page.height, " < ", self, function()
+    self.previous = ISButton:new(x, y, math.floor((self.page.width - padding) / 2), self.page.height, " < ", self,
+        function()
             self:navigatePrevious()
         end)
     self.previous:initialise()
@@ -418,6 +385,40 @@ function UI:createChildren()
     };
     self.nextDisable:setVisible(false)
     self:addChild(self.nextDisable)
+
+    y = y + self.previous.height + padding
+    -- description
+    -- self.description.height = self.height - self.description.y - (self.closeit.height + 20)
+    -- self.description.height = self.height - self.description.y - (self.closeit.height + 20)
+    -- self.closeit.y = self.description.y + self.description.height + 10
+    self.description = ISRichTextPanel:new(x, y, self.width - x - padding, self.height - y - (self.closeit.height + 20));
+    self.description:initialise();
+    self.description:instantiate();
+    self.description.borderColor = {
+        r = 0.7,
+        g = 0.7,
+        b = 0.7,
+        a = 1
+    };
+    self.description.backgroundColor = {
+        r = 0,
+        g = 0,
+        b = 0,
+        a = 0.8
+    };
+    -- self.description.onMouseMove = self.onMouseMove
+    -- self.description.onMouseDown = self.onMouseDown
+    self.description.onMouseUp = function(x, y)
+        self:onMouseUp(x, y)
+    end
+    self.description.borderColor = self.buttonBorderColor
+    self.description.autosetheight = false
+    self.description:setText(getText("IGUI_PhunStuff_WelcomeText0"))
+    self.description:paginate()
+
+    self:addChild(self.description);
+
+    y = self.description.y + self.description.height + 10
 
 end
 
