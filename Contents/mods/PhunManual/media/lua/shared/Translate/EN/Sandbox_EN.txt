@@ -12,4 +12,6 @@ Sandbox_EN = {
     Sandbox_PhunManual_MustReadOnceBeforeClose= "Close only on last page once"
     Sandbox_PhunManual_MustReadOnceBeforeClose_tooltip = "Disable close button until last page for first show"
 
+    Sandbox_PhunManual_ManualPagesKey= "Key"
+    Sandbox_PhunManual_ManualPagesKey_tooltip = "Changing the key will effectively reset everyones read markers. Thereby forcing peeps to read again!"
 }

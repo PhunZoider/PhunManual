@@ -34,6 +34,7 @@ function UI.OnOpenPanel(playerObj, playerIndex)
     UI.instances[playerIndex]:addToUIManager();
     UI.instances[playerIndex]:setVisible(true);
     UI.instances[playerIndex].panelIndex = 1
+    UI.instances[playerIndex]:navigate(1)
     return UI.instances[playerIndex];
 
 end
@@ -100,31 +101,68 @@ end
 -- br = hard break
 -- text = normal text
 local txts = {
-    txt0 = "<H2><LEFT>Welcome <LINE><TEXT>This small guide will intro you to some of the unique and custom features of this server. <BR>You can open this window at any time by clicking the location widget: <BR><IMAGECENTRE:media/textures/PMI1.png>",
+    txt0 = "<H2><LEFT>Welcome <LINE><TEXT>This small guide will intro you to some of the unique and custom features of this server. <BR>You can open this window at any time by clicking the location widget above your minimap: <BR><IMAGECENTRE:media/textures/PMI1.png><RGB:1,1,0>You are required to read the first few pages the first time you join.",
     txt1 = "<H2><LEFT>The Hospital <LINE><TEXT>You have awoken in what appears to be an underground, hidden hopital room. <BR>This unique spawning system increases a sense of danger when exploring new areas. While encouraging community interation.",
     txt2 = "<H2><LEFT>First Loot <LINE><TEXT>When you awaken, all of the clothing and gear you would normally have spawned in with will be located in the drawers next to the bed. <BR>Gear is profession specific. Some professions get better gear than others.",
     txt3 = "<H2><LEFT>The Escape <LINE><TEXT>When you're ready to exit, you can escape through the vent. In case you want to avoid entering the world in the dark, check the clock first! You will then be prompted to choose which location you want to spawn in. <BR><LEFT><RGB:1,1,0>IMPORTANT: <LINE><TEXT>You can only ever spawn into the world at a vent you have discovered or crafted.",
-    txt4 = "<H2><LEFT>Clues <LINE><TEXT>Since you can only spawn at vents, you will need to find or craft more as you explore Kentucky. <BR>To help find more vents, look for Clues that can drop from zeds. You can also craft vents through in the crafting window. <BR><RGB:1,1,0>Note: <LINE><TEXT>Although you can place a vent within your safehouse, you cannot claim a safehouse if the building has an existing vent (as it could allow others to spawn into the safehouse). Because you can't crawl from a vent into a vehicle, vents cannot place inside an RV.",
-    txt5 = "<H2><LEFT>Sprinters <LINE><TEXT>Depending on where you are and how dark (or foggy) it is, you may encouter sprinters. <BR>These sprinters are faster than normal zeds and can be quite dangerous. <BR>Be cautious when exploring new areas. <BR><H2><LEFT><RGB:1,1,0>Tips <LINE><TEXT>- Sprinters look like skeletons <LINE>- Sprinters stop running if its light. <LINE>- Attach a flashlight to your belt, backpack or helmet to slow them down <LINE>- Keep an eye on your location, it will indicate the risk level of spawning sprinters",
-    txt6 = "<H2><LEFT>A Cure? <LINE><TEXT>Hazmat zeds drop special Ampules which will can remove the Knox virus. Trouble is, it will go off and become ineffectual within a couple days. Best to keep refridgerated or frozen!",
-    txt7 = "<H2><LEFT>Shopping <LINE><TEXT>Almost everything in game can be purchased at special vending machines scattered across the map. <BR>These machines take a variety of currency (most which drop from zeds) and let you buy things from cars to weapons to boosts and perks <BR><H2><LEFT>Currency <LINE><TEXT>The different coins you pick up go into your wallet which can be found on a tab in your health and skill window. <BR><IMAGECENTRE:media/textures/PMI4.png> <LINE><TEXT>If you die, you can recover your wallet from your body, though some coins will be lost.<BR><IMAGECENTRE:media/textures/PMI5.png> ",
-    txt8 = "<H2><LEFT>Safe Space <LINE><TEXT>The Michelles Crafts vending machine sells a special item called Repellent Paint which allows you to create a Safehouse from scratch or to extend an existing Safehouse",
-    txt9 = "<H2><LEFT>Car Claims <LINE><TEXT>Want to protect your car and it's contents? Claim it! <BR>You can claim up to 5 cars. In order to claim, you need to craft a Mysterious Orb which you can find in the crafting window <BR><IMAGECENTRE:media/textures/PMI3.png> ",
-    txt10 = "<H2><LEFT>Solar <LINE><TEXT>Don't let climate change destroy your apocolypse! <BR>Keep an eye out for solar panels and related parts. They are critical for power generation after gas stations run dry!",
-    txt11 = "<H2><LEFT>Join the discord! <LINE><TEXT>For important info, click here. <BR><H2><LEFT>Journaling <LINE><TEXT>Craft a Journal (search in the crafting window) to preserve most of your skills between spawns. <BR><IMAGECENTRE:media/textures/PMI2.png>  <BR><H2><LEFT>Car Claims <LINE><TEXT>Claim up to 5 cars by crafting and applying a Mysterious Orb (search in the crafting window). <BR><H2><LEFT>Loot respawns <LINE><TEXT>Every few days as long as the container has been emptied and is not player made. Note that some map mods do their own thing. <BR><H2><LEFT>Vanishing Items <LINE><TEXT>With few exceptions, dropped loot will despawn. If you want something to stay on the floor, place it!"
+    txt4 = "<H2><LEFT>Clues <LINE><TEXT>Since you can only spawn at vents, you will need to find or craft more as you explore Kentucky. <BR>To help find more vents, look for Clues that can drop from zeds. You can also craft vents through in the crafting window. <BR><RGB:1,1,0>Note: <LINE><TEXT>Although you can place a vent within your safehouse, you cannot claim a safehouse if the building has an existing vent (as it could allow others to spawn into the safehouse).",
+    txt5 = "<H2><LEFT>Sprinters <LINE><TEXT>Depending on where you are and how dark (or foggy) it is, you may encounter sprinters. <BR>These sprinters are faster than normal zeds and can be quite dangerous. <BR><IMAGECENTRE:media/textures/PMI6.png> <BR>Be cautious when exploring new areas. <BR><H2><LEFT><RGB:1,1,0>Tips <LINE><TEXT>- Sprinters look like skeletons <LINE>- Sprinters stop running if its light. <LINE>- Attach a flashlight to your belt, backpack or helmet to slow them down <LINE>- Keep an eye on the skull moodle, it will indicate the risk level of spawning sprinters",
+    txt6 = "<H2><LEFT>Nuclear POWA <LINE><TEXT>Rumours have it that some survivors are trying to power up the nearby nuclear power plant to provide the area with power. However their attempts so far have left some areas of Kentucky radiated. <BR><H2><LEFT><RGB:1,1,0>Follow these tips for longer life <LINE><TEXT><LINE>- Keep a working Geiger Counter on your toolbelt at all times to receive early warnings of radiation exposure <LINE>- Take Iodine pills to provide protection against radiation <LINE>- Iodine will also reduce radiation sickness as long as you are in a no or lower radiated area <LINE>- Hazmat gear will help insulate against radiation, but make sure you keep it in good condition! <LINE>- Some items will emit radiation, so don't accept nuclear waste from strangers <BR><IMAGECENTRE:media/textures/PMI7.png>",
+    txt7 = "<H2><LEFT>Machines <LINE><TEXT> You can now create specialized machines to super charge your survival. These are found within the Building Menu (via right clicking or the the shortcut key /)",
+    txt8 = "<H2><LEFT>A Cure? <LINE><TEXT>Hazmat zeds drop special Ampules which will can remove the Knox virus. Trouble is, it will go off and become ineffectual within a couple days. Best to keep refridgerated or frozen!",
+    txt9 = "<H2><LEFT>Shopping <LINE><TEXT>Almost everything in game can be purchased at special vending machines scattered across the map. <BR>These machines take a variety of currency (most which drop from zeds) and let you buy things from cars to weapons to boosts and perks <BR><H2><LEFT>Currency <LINE><TEXT>The different coins you pick up go into your wallet which can be found on a tab in your health and skill window. <BR><IMAGECENTRE:media/textures/PMI4.png> <LINE><TEXT>If you die, you can recover your wallet from your body, though some coins will be lost.<BR><IMAGECENTRE:media/textures/PMI5.png> ",
+    txt10 = "<H2><LEFT>Safe Space <LINE><TEXT>The Michelles Crafts vending machine sells a special item called Repellent Paint which allows you to create a Safehouse from scratch or to extend an existing Safehouse",
+    txt11 = "<H2><LEFT>Car Claims <LINE><TEXT>Want to protect your car and it's contents? Claim it! <BR>You can claim up to 5 cars. In order to claim, you need to craft a Mysterious Orb which you can find in the crafting window <BR><IMAGECENTRE:media/textures/PMI3.png> ",
+    txt12 = "<H2><LEFT>Solar <LINE><TEXT>Don't let climate change destroy your apocolypse! <BR>Keep an eye out for solar panels and related parts. They are critical for power generation after gas stations run dry!",
+    txt13 = "<H2><LEFT>Join the discord! <LINE><TEXT>For important info, click here. <BR><H2><LEFT>Journaling <LINE><TEXT>Craft a Journal (search in the crafting window) to preserve most of your skills between spawns. <BR><IMAGECENTRE:media/textures/PMI2.png>  <BR><H2><LEFT>Car Claims <LINE><TEXT>Claim up to 5 cars by crafting and applying a Mysterious Orb (search in the crafting window). <BR><H2><LEFT>Loot respawns <LINE><TEXT>Every few days as long as the container has been emptied and is not player made. Note that some map mods do their own thing. <BR><H2><LEFT>Vanishing Items <LINE><TEXT>With few exceptions, dropped loot will despawn. If you want something to stay on the floor, place it!"
 }
+
+function UI:markPage(page)
+    local data = self:getReadData()
+    data[tostring(page)] = true
+end
+
+function UI:getReadData()
+    local key = PM.settings.ManualPagesKey or "default"
+    local modData = self.player:getModData()
+    if not modData.PhunManual then
+        modData.PhunManual = {}
+    end
+    local data = modData.PhunManual
+    if not data[key] then
+        data[key] = {}
+    end
+    if not data[key].pages then
+        data[key].pages = {}
+    end
+    return data[key].pages
+end
+function UI:getOutstanding()
+
+    local data = self:getReadData()
+    local requiredPages = luautils.split(PM.settings.ManualPages, ";")
+    local outstanding = {}
+    for k, v in ipairs(requiredPages) do
+        if not data[v] then
+            table.insert(outstanding, v)
+        end
+    end
+    return outstanding
+end
 
 function UI:navigate(page)
     if self.page.selected ~= page then
         self.page.selected = page
     end
+    self:markPage(page)
+
     self.imagePanel.texture = self.panelImages[page].texture
-    local raw = luautils.split(PM.settings.ManualPages, ";")
     local txt = getTextOrNull("IGUI_PhunManual_P" .. (page - 1) .. "Title") or ""
 
     if txts["txt" .. (page - 1)] then
         txt = txts["txt" .. (page - 1)]
     end
+
     local link = getTextOrNull("IGUI_PhunStuff_WelcomeClick" .. (page - 1))
     self.description.imageCount = 0
     self.description:setText(txt)
@@ -133,37 +171,47 @@ function UI:navigate(page)
     self.previousDisable:setVisible(page <= 1)
     self.nextDisable:setVisible(page >= #self.panelImages)
 
-    if not self.player:getModData().PhunManual then
-        self.player:getModData().PhunManual = {}
-    end
-
-    local modData = self.player:getModData().PhunManual
-    if not modData.pages then
-        modData.pages = {
-            [1] = true
-        }
-    end
-    if not modData.pages[1] then
-        -- give first page by default
-        modData.pages[1] = true
-    end
-    modData.pages[page] = true
-    local readall = true
-    local remqaining = {}
-    for i, v in ipairs(raw) do
-        if not modData.pages[i + 1] then
-            readall = false
-            table.insert(remqaining, i + 1)
-        end
-    end
-
-    if readall or PM.settings.MustReadOnceBeforeClose then
+    local outstanding = self:getOutstanding()
+    if #outstanding == 0 then
         self.closeit.enable = true
     else
+        self.closeit.enable = false
         self.closeit.tooltip =
             "You must read all pages before you can close this window. You still need to read: pages " ..
-                table.concat(remqaining, ", ")
+                table.concat(outstanding, ", ")
     end
+
+    -- if not self.player:getModData().PhunManual then
+    --     self.player:getModData().PhunManual = {}
+    -- end
+
+    -- local modData = self.player:getModData().PhunManual
+    -- if not modData.pages then
+    --     modData.pages = {
+    --         [1] = true
+    --     }
+    -- end
+    -- if not modData.pages[1] then
+    --     -- give first page by default
+    --     modData.pages[1] = true
+    -- end
+    -- modData.pages[page] = true
+    -- local readall = true
+    -- local remqaining = {}
+    -- for i, v in ipairs(raw) do
+    --     if not modData.pages[i + 1] then
+    --         readall = false
+    --         table.insert(remqaining, i + 1)
+    --     end
+    -- end
+
+    -- if readall or PM.settings.MustReadOnceBeforeClose then
+    --     self.closeit.enable = true
+    -- else
+    --     self.closeit.tooltip =
+    --         "You must read all pages before you can close this window. You still need to read: pages " ..
+    --             table.concat(remqaining, ", ")
+    -- end
 end
 
 function UI:onMouseMove(dx, dy)
